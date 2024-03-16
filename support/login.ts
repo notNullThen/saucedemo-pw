@@ -1,8 +1,11 @@
-import { type Page, expect } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import LoginPage from "../pages/login";
 
-export async function login(page: Page) {
-  await page.locator('[data-test="username"]').fill("standard_user");
-  await page.locator('[data-test="password"]').fill("secret_sauce");
-  await page.locator('[data-test="login-button"]').click();
-  await expect(page.locator(".header_secondary_container")).toBeVisible();
+export async function login(
+  page: Page,
+  { userName, password }: { userName: string; password: string }
+) {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login({ userName, password });
 }

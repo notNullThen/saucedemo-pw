@@ -1,10 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
+import "dotenv/config";
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -23,7 +23,7 @@ export default defineConfig({
   reporter: "list",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    // testIdAttribute: "data-test",
+    testIdAttribute: "data-test",
     baseURL: "https://www.saucedemo.com/",
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
