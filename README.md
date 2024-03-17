@@ -38,14 +38,14 @@ You need to have NodeJS installed on your operating system.
     - See the error message disappears
 #### Log in with INVALID user name and valid password
 1. Navigate to https://www.saucedemo.com/
-2. Set the valid "Username" and INVALID "Password" credentials
+2. Set the INVALID "Username" and valid "Password" credentials
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
 3. Click the error message Clode (X) button
     - See the error message disappears
 #### Log in with locked out valid user credentials
 1. Navigate to https://www.saucedemo.com/
-2. Set the valid "Username" and INVALID "Password" credentials
-    - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+2. Set the locked user valid credentials
+    - See the "Epic sadface: Sorry, this user has been locked out." error message appears
 3. Click the error message Clode (X) button
     - See the error message disappears
 #### Log in with locked out valid user name and INVALID password credentials

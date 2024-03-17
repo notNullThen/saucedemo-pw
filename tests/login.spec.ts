@@ -57,7 +57,7 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
 
 /**
  * Navigate to https://www.saucedemo.com/
- * Set the valid "Username" and INVALID "Password" credentials
+ * Set the INVALID "Username" and valid "Password" credentials
  *  See the "Epic sadface: Username and password do not match any user in this service" error message appears
  * Click the error message Clode (X) button
  *  See the error message disappears
@@ -85,7 +85,7 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
 
 /**
  * Navigate to https://www.saucedemo.com/
- * Set the valid "Username" and INVALID "Password" credentials
+ * Set the locked user valid credentials
  *  See the "Epic sadface: Username and password do not match any user in this service" error message appears
  * Click the error message Clode (X) button
  *  See the error message disappears
@@ -95,13 +95,13 @@ test("Log in with locked out valid user credentials", async ({ page }) => {
   await page.context().clearCookies();
 
   // Navigate to https://www.saucedemo.com/
-  // Set the valid "Username" and INVALID "Password" credentials
+  // Set the locked user valid credentials
   await loginPage.goto();
   await loginPage.login({
     userName: process.env.LOCKED_OUT_USER_NAME!,
     password: process.env.PASSWORD!,
   });
-  //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
+  //  See the "Epic sadface: Sorry, this user has been locked out." error message appears
   await expect(loginPage.errorMessageContainer).toHaveText(
     loginPage.messages.lockedOutUserCredentials
   );
@@ -129,11 +129,11 @@ test("Log in with locked out valid user name and INVALID password credentials", 
   await loginPage.goto();
   await loginPage.login({
     userName: process.env.LOCKED_OUT_USER_NAME!,
-    password: process.env.PASSWORD!,
+    password: "wrongPassword",
   });
   //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
   await expect(loginPage.errorMessageContainer).toHaveText(
-    loginPage.messages.lockedOutUserCredentials
+    loginPage.messages.invalidCredentials
   );
 
   // Click the error message Clode (X) button
