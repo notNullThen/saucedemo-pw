@@ -185,14 +185,11 @@ The following test cases are considered high priority for the e-commerce website
 
 - **Log in with valid username and INVALID password**: Ensures the system correctly handles invalid login attempts to prevent unauthorized access.
 
-- **SQL Injection Vulnerability Test**
-This test is crucial for protecting the website from SQL injection attacks, which can compromise the entire database.
+- **SQL Injection Vulnerability Test**: This test is crucial for protecting the website from SQL injection attacks, which can compromise the entire database.
 
-- **XSS Vulnerability Test**
-Cross-site scripting (XSS) attacks can result in damage. This test ensures that the website is not vulnerable to such threats.
+- **XSS Vulnerability Test**: Cross-site scripting (XSS) attacks can result in damage. This test ensures that the website is not vulnerable to such threats.
 
-- **Session Cookie Attributes Test**
-Cookies must be secure to prevent hijacking and other exploits. This test checks for vulnerabilities in cookie handling. The test finds the Cookies Vulnerability. It is **skipped** and needs to be unskipped manually at ```tests/login.spec.ts``` file after validating the issue.
+- **Session Cookie Attributes Test**: Cookies must be secure to prevent hijacking and other exploits. This test checks for vulnerabilities in cookie handling. The test finds the Cookies Vulnerability. It is **skipped** and needs to be unskipped manually at ```tests/login.spec.ts``` file after validating the issue.
 
 
 ### ***User Experience***
