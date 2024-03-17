@@ -113,7 +113,7 @@ npx playwright test
     - See the error message disappears
 
 
-#### Session cookie attributes test - founds vulnerability
+#### Session cookie attributes test - finds vulnerability
 
 ( *'.skip' option is applied to this test* )
 1. Navigate to https://www.saucedemo.com/
