@@ -4,12 +4,27 @@ export default class LoginPage {
   protected page: Page;
   readonly userNameInput: Locator;
   readonly passwordInput: Locator;
+  readonly errorMessageContainer: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.userNameInput = page.getByTestId("username");
     this.passwordInput = page.getByTestId("password");
+    this.errorMessageContainer = page.getByTestId("error");
   }
+
+  messages = {
+    invalidCredentials:
+      "Epic sadface: Username and password do not match any user in this service",
+    lockedOutUserCredentials:
+      "Epic sadface: Sorry, this user has been locked out.",
+    loggedOutInventoryPageNavigate:
+      "Epic sadface: You can only access '/inventory.html' when you are logged in.",
+    loggedOutInventoryItemPageNavigate:
+      "Epic sadface: You can only access '/inventory-item.html' when you are logged in.",
+    loggedOutCartPageNavigate:
+      "Epic sadface: You can only access '/cart.html' when you are logged in.",
+  };
 
   async goto() {
     await this.page.goto("/");
@@ -28,5 +43,9 @@ export default class LoginPage {
     await this.passwordInput.fill(password);
 
     await this.page.getByTestId("login-button").click();
+  }
+  async closeErrorMessage() {
+    await this.errorMessageContainer.locator(".error-button").click();
+    await expect(this.errorMessageContainer).not.toBeAttached();
   }
 }
