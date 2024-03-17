@@ -17,8 +17,8 @@ import calculatePrices from "../support/calculatePrices";
  * Click "Continue" button
  *  See no error message appears
  *  See the Shopping cart has "1" counter
- * See Item Name, Price & Description are valid
- * Validate product price and tax
+ *  See Item Name, Price & Description are valid
+ *  See product has correct price and tax
  * Click "Finish" button
  *  See the checkout greeting appears and has proper text
  * Click "Back home" button
@@ -73,7 +73,7 @@ test("User should be able to buy one item", async ({ page }) => {
   await yourCartPage.yourInformation.continue();
   //  See the Shopping cart has "1" counter
   await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
-  // See Item Name, Price & Description are valid
+  //  See Item Name, Price & Description are valid
   const itemCheckoutName =
     await yourCartPage.itemDetails.itemsNames.textContent();
   const itemCheckoutDescription =
@@ -84,7 +84,7 @@ test("User should be able to buy one item", async ({ page }) => {
   await expect(itemCheckoutDescription).toEqual(itemDescription);
   await expect(itemCheckoutPrice).toEqual(itemPrice);
 
-  // Validate product price and tax
+  //  See product has correct price and tax
   const { taxPriceFormatted, priceWithTaxFormatted } =
     calculatePrices(itemPrice);
   await expect(await yourCartPage.overview.itemTotalPrice).toContain(itemPrice);
@@ -124,7 +124,7 @@ test("User should be able to buy multiple items", async ({ page }) => {
  *  See Item Name, Image URL & Description are valid
  * Click the "Back to products" button
  *  See the page title is "Products"
- * Repeat for all products
+ * Repeat the previous steps for all products
  */
 test("All items details should correspond to its details page", async ({
   page,
@@ -168,6 +168,6 @@ test("All items details should correspond to its details page", async ({
     // Click the "Back to products" button
     //  See the page title is "Products"
     await inventoryPage.backToProducts();
-    // Repeat for all products
+    // Repeat the previous steps for all products
   }
 });
