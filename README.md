@@ -20,7 +20,7 @@ You need to have NodeJS installed on your operating system.
 2. Clone the project to that directory with ```git clone https://github.com/notNullThen/saucedemo-pw.git```
 3. Navigate to projects directory ```cd ./saucedemo-pw```
 4. Install all dependencies by running ```npm install```
-5. Run tests with ```npx playwright test```
+5. Run all tests with ```npx playwright test```
 
 # Covered test cases
 
