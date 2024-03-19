@@ -57,6 +57,7 @@ npx playwright test
 2. Set the valid "Username" and INVALID "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -67,6 +68,7 @@ npx playwright test
 2. Set the INVALID "Username" and valid "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -77,6 +79,7 @@ npx playwright test
 2. Set the locked user valid credentials
 3. Click the "Login" button
     - See the "Epic sadface: Sorry, this user has been locked out." error message appears
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -87,6 +90,7 @@ npx playwright test
 2. Set the valid "Username" and INVALID "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -98,6 +102,7 @@ npx playwright test
 3. Click the "Login" button
     - See the page URL didn't change
     - See the "Epic sadface: Username and password do not match any 
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -109,18 +114,19 @@ npx playwright test
 3. Click the "Login" button
     - See the page didn't execute the XSS payload
     - See the "Epic sadface: Username and password do not match any 
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
 
-#### Session cookie attributes test - finds vulnerability
+#### Session cookies attributes test - finds vulnerability
 
 ( *'.skip' option is applied to this test* )
 1. Navigate to https://www.saucedemo.com/
 2. Set valid "Username" and "Password" credentials
 3. Click the "Login" button
     - See the sort container appears
-    - See the session cookie has Secure and HttpOnly attributes
+    - See the session cookies have Secure and HttpOnly attributes
 
 
 #### Navigate Inventory, Inventory Items and Cart page without logging in
@@ -131,6 +137,7 @@ npx playwright test
     - See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
 3. Navigate to https://www.saucedemo.com/cart.html without logging in
     - See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
+    - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -189,7 +196,7 @@ The following test cases are considered high priority for the e-commerce website
 
 - **XSS Vulnerability Test**: Cross-site scripting (XSS) attacks can result in damage. This test ensures that the website is not vulnerable to such threats.
 
-- **Session Cookie Attributes Test**: Cookies must be secure to prevent hijacking and other exploits. This test checks for vulnerabilities in cookie handling. The test finds the Cookies Vulnerability. It is **skipped** and needs to be unskipped manually at ```tests/login.spec.ts``` file after validating the issue.
+- **Session Cookies Attributes Test**: Cookies must be secure to prevent hijacking and other exploits. This test checks for vulnerabilities in cookies handling. The test finds the Cookies Vulnerability. It is **skipped** and needs to be unskipped manually at ```tests/login.spec.ts``` file after validating the issue.
 
 
 ### ***User Experience***

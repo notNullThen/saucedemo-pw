@@ -10,6 +10,7 @@ import "dotenv/config";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  timeout: 5000,
   testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -20,11 +21,11 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "list",
+  reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     testIdAttribute: "data-test",
-    baseURL: "https://www.saucedemo.com/",
+    baseURL: process.env.BASE_URL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
