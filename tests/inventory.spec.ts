@@ -4,6 +4,11 @@ import InventoryItemPage from "../pages/inventoryItem";
 import YourCartPage from "../pages/yourCart";
 import { faker } from "@faker-js/faker";
 import calculatePrices from "../support/calculatePrices";
+import CheckoutPage from "../pages/checkout";
+
+const errorMessages = {
+  shoppingCartCounterNumberError: `Shopping cart counter didn't show the correct number after user added the item to cart`,
+};
 
 /**
  * Go to /inventory.html
@@ -27,87 +32,108 @@ import calculatePrices from "../support/calculatePrices";
 test("User should be able to buy one item", async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   const yourCartPage = new YourCartPage(page);
+  const checkoutPage = new CheckoutPage(page);
+  interface ItemDetails {
+    name: string | null;
+    description: string | null;
+    price: string | null;
+  }
+  const inventoryItem: ItemDetails = { name: "", description: "", price: "" };
+  const cartItem: ItemDetails = { name: "", description: "", price: "" };
+  const checkoutItem: ItemDetails = { name: "", description: "", price: "" };
 
-  // Go to /inventory.html
-  await inventoryPage.goto();
-  //  See Item Name, Description, Price & Image URL are valid
-  const itemName = await inventoryPage.itemDetails.itemsNames
-    .first()
-    .textContent();
-  const itemDescription = await inventoryPage.itemDetails.itemsDescriptions
-    .first()
-    .textContent();
-  const itemPrice = await inventoryPage.itemDetails.itemsPrices
-    .first()
-    .textContent();
+  await test.step("Add item to cart", async () => {
+    // Go to /inventory.html
+    await inventoryPage.goto();
+    //  See Item Name, Description, Price & Image URL are valid
+    inventoryItem.name = await inventoryPage.itemDetails.itemsNames
+      .first()
+      .textContent();
+    inventoryItem.description =
+      await inventoryPage.itemDetails.itemsDescriptions.first().textContent();
+    inventoryItem.price = await inventoryPage.itemDetails.itemsPrices
+      .first()
+      .textContent();
 
-  // Click item "Add to cart" button
-  await inventoryPage.addToCartButtons.first().click();
-  //  See the Shopping cart "1" counter appears
-  await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
-
-  // Click the Shopping cart
-  await inventoryPage.shoppingCart.click();
-  //  See the Shopping cart has "1" counter
-  await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
-  //  See Item Name, Image URL & Description are valid
-  const itemCartName = await yourCartPage.itemDetails.itemsNames.textContent();
-  const itemCartDescription =
-    await yourCartPage.itemDetails.itemsDescriptions.textContent();
-  const itemCartPrice =
-    await yourCartPage.itemDetails.itemsPrices.textContent();
-  await expect(itemCartName).toEqual(itemName);
-  await expect(itemCartDescription).toEqual(itemDescription);
-  await expect(itemCartPrice).toEqual(itemPrice);
-  await yourCartPage.checkout();
-
-  // Fill the required data with valid details
-  await yourCartPage.yourInformation.fillData({
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    postalCode: faker.location.zipCode(),
+    // Click item "Add to cart" button
+    await inventoryPage.addToCartButtons.first().click();
+    //  See the Shopping cart "1" counter appears
+    await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
   });
 
-  // Click "Continue" button
-  //  See no error message appears
-  await yourCartPage.yourInformation.continue();
-  //  See the Shopping cart has "1" counter
-  await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
-  //  See Item Name, Price & Description are valid
-  const itemCheckoutName =
-    await yourCartPage.itemDetails.itemsNames.textContent();
-  const itemCheckoutDescription =
-    await yourCartPage.itemDetails.itemsDescriptions.textContent();
-  const itemCheckoutPrice =
-    await yourCartPage.itemDetails.itemsPrices.textContent();
-  await expect(itemCheckoutName).toEqual(itemName);
-  await expect(itemCheckoutDescription).toEqual(itemDescription);
-  await expect(itemCheckoutPrice).toEqual(itemPrice);
+  await test.step("Go to shopping cart and validate product details", async () => {
+    // Click the Shopping cart
+    await inventoryPage.shoppingCart.click();
+    //  See the Shopping cart has "1" counter
+    await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
+    //  See Item Name, Image URL & Description are valid
+    cartItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
+    cartItem.description =
+      await yourCartPage.itemDetails.itemsDescriptions.textContent();
+    cartItem.price = await yourCartPage.itemDetails.itemsPrices.textContent();
+    expect(cartItem.name).toEqual(inventoryItem.name);
+    expect(cartItem.description).toEqual(inventoryItem.description);
+    expect(cartItem.price).toEqual(inventoryItem.price);
+    await yourCartPage.checkout();
+  });
 
-  //  See product has correct price and tax
-  const { taxPriceFormatted, priceWithTaxFormatted } =
-    calculatePrices(itemPrice);
-  await expect(await yourCartPage.overview.itemTotalPrice).toContain(itemPrice);
-  await expect(await yourCartPage.overview.itemTaxPrice).toContain(
-    taxPriceFormatted
-  );
-  await expect(await yourCartPage.overview.itemTotalPriceWithTax).toContain(
-    priceWithTaxFormatted
-  );
+  await test.step("Fill the required data with valid details", async () => {
+    await checkoutPage.yourInformation.fillData({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      postalCode: faker.location.zipCode(),
+    });
+  });
 
-  // Click "Finish" button
-  await yourCartPage.overview.finish();
-  //  See the checkout greeting appears and has proper text
-  await expect(await yourCartPage.completed.checkoutGreeting).toContainText(
-    "Thank you for your order!"
-  );
-  await expect(await yourCartPage.completed.checkoutGreeting).toContainText(
-    "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
-  );
+  await test.step("Validate shopping cart counter behavoir", async () => {
+    // Click "Continue" button
+    //  See no error message appears
+    await checkoutPage.yourInformation.continue();
+    //  See the Shopping cart has "1" counter
+    try {
+      await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
+    } catch (error) {
+      throw new Error(errorMessages.shoppingCartCounterNumberError);
+    }
+  });
+  await test.step(`Validate product details, finish the order and go to Inventory page`, async () => {
+    //  See Item Name, Price & Description are valid
+    checkoutItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
+    checkoutItem.description =
+      await yourCartPage.itemDetails.itemsDescriptions.textContent();
+    checkoutItem.price =
+      await yourCartPage.itemDetails.itemsPrices.textContent();
+    expect(checkoutItem.name).toEqual(inventoryItem.name);
+    expect(checkoutItem.description).toEqual(inventoryItem.description);
+    expect(checkoutItem.price).toEqual(inventoryItem.price);
 
-  // Click "Back home" button
-  //  See the page title is "Products"
-  await yourCartPage.completed.backHome();
+    //  See product has correct price and tax
+    const { taxPriceFormatted, priceWithTaxFormatted } = calculatePrices(
+      inventoryItem.price
+    );
+    expect(await checkoutPage.overview.itemTotalPrice).toContain(
+      inventoryItem.price
+    );
+    expect(await checkoutPage.overview.itemTaxPrice).toContain(
+      taxPriceFormatted
+    );
+    expect(await checkoutPage.overview.itemTotalPriceWithTax).toContain(
+      priceWithTaxFormatted
+    );
+
+    // Click "Finish" button
+    await checkoutPage.overview.finish();
+    //  See the checkout greeting appears and has proper text
+    await expect(await checkoutPage.completed.checkoutGreeting).toContainText(
+      "Thank you for your order!"
+    );
+    await expect(await checkoutPage.completed.checkoutGreeting).toContainText(
+      "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
+    );
+    // Click "Back home" button
+    //  See the page title is "Products"
+    await checkoutPage.completed.backHome();
+  });
 });
 
 // TODO:
@@ -131,43 +157,45 @@ test("All items details should correspond to its details page", async ({
 }) => {
   const inventoryPage = new InventoryPage(page);
   const inventoryItemPage = new InventoryItemPage(page);
-
   // Navigate to /inventory.html
   await inventoryPage.goto();
   const itemsCount = await page.locator(".inventory_item").count();
 
   for (let index = 0; index < itemsCount; index++) {
-    // Get item Name, Description, Price & Image URL
-    const itemName = await inventoryPage.itemDetails.itemsNames
-      .nth(index)
-      .textContent();
-    const itemDescription = await inventoryPage.itemDetails.itemsDescriptions
-      .nth(index)
-      .textContent();
-    const itemPrice = await inventoryPage.itemDetails.itemsPrices
-      .nth(index)
-      .textContent();
-    const itemImageURL = await inventoryPage.itemDetails.itemsImages
-      .nth(index)
-      .getAttribute("src");
-    // Click item name
-    await inventoryPage.itemDetails.itemsNames.nth(index).click();
+    await test.step(`The item #${
+      index + 1
+    } details should correspond to its details page`, async () => {
+      // Get item Name, Description, Price & Image URL
+      const itemName = await inventoryPage.itemDetails.itemsNames
+        .nth(index)
+        .textContent();
+      const itemDescription = await inventoryPage.itemDetails.itemsDescriptions
+        .nth(index)
+        .textContent();
+      const itemPrice = await inventoryPage.itemDetails.itemsPrices
+        .nth(index)
+        .textContent();
+      const itemImageURL = await inventoryPage.itemDetails.itemsImages
+        .nth(index)
+        .getAttribute("src");
+      // Click item name
+      await inventoryPage.itemDetails.itemsNames.nth(index).click();
 
-    //  See Item Name, Image URL & Description are valid
-    const itemDetailsName = await inventoryItemPage.itemName.textContent();
-    const itemDetailsDescription =
-      await inventoryItemPage.itemDescription.textContent();
-    const itemDetailsPrice = await inventoryItemPage.itemPrice.textContent();
-    const itemDetailsImageURL = await inventoryItemPage.itemImage.getAttribute(
-      "src"
-    );
-    await expect(itemDetailsName).toEqual(itemName);
-    await expect(itemDetailsDescription).toEqual(itemDescription);
-    await expect(itemDetailsPrice).toEqual(itemPrice);
-    await expect(itemDetailsImageURL).toEqual(itemImageURL);
-    // Click the "Back to products" button
-    //  See the page title is "Products"
-    await inventoryPage.backToProducts();
-    // Repeat the previous steps for all products
+      //  See Item Name, Image URL & Description are valid
+      const itemDetailsName = await inventoryItemPage.itemName.textContent();
+      const itemDetailsDescription =
+        await inventoryItemPage.itemDescription.textContent();
+      const itemDetailsPrice = await inventoryItemPage.itemPrice.textContent();
+      const itemDetailsImageURL =
+        await inventoryItemPage.itemImage.getAttribute("src");
+      expect(itemDetailsName).toEqual(itemName);
+      expect(itemDetailsDescription).toEqual(itemDescription);
+      expect(itemDetailsPrice).toEqual(itemPrice);
+      expect(itemDetailsImageURL).toEqual(itemImageURL);
+      // Click the "Back to products" button
+      //  See the page title is "Products"
+      await inventoryItemPage.backToProducts();
+      // Repeat the previous steps for all products
+    });
   }
 });

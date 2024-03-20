@@ -137,6 +137,8 @@ npx playwright test
     - See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
 3. Navigate to https://www.saucedemo.com/cart.html without logging in
     - See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
+4. Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in
+    - See the "Epic sadface: You can only access '/checkout-step-one.html' when you are logged in" error message appears
     - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears

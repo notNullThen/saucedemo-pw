@@ -1,6 +1,7 @@
-import { Locator, type Page } from "@playwright/test";
+import { Locator, expect, type Page } from "@playwright/test";
+import AbstractPage from "./abstractPage";
 
-export default class InventoryItemPage {
+export default class InventoryItemPage extends AbstractPage {
   protected page: Page;
   readonly itemName: Locator;
   readonly itemDescription: Locator;
@@ -8,6 +9,7 @@ export default class InventoryItemPage {
   readonly itemImage: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.itemName = page.locator(".inventory_details_name");
     this.itemDescription = page.locator(".inventory_details_desc");
@@ -16,6 +18,10 @@ export default class InventoryItemPage {
   }
 
   async goto(id?: string) {
-    await this.page.goto(`inventory-item.html?id=${id}`);
+    await this.page.goto(`${process.env.INVENTORY_ITEM_PAGE_URL}?id=${id}`);
+  }
+  async backToProducts() {
+    await this.page.getByTestId("back-to-products").click();
+    await expect(this.pageTitle).toHaveText("Products");
   }
 }

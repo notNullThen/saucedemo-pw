@@ -19,10 +19,7 @@ export default class InventoryPage extends AbstractPage {
   }
 
   async goto() {
-    await this.page.goto("inventory.html");
-  }
-  async backToProducts() {
-    await this.page.getByTestId("back-to-products").click();
+    await this.page.goto(process.env.INVENTORY_PAGE_URL!);
     await expect(await this.pageTitle).toHaveText("Products");
   }
 }

@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
 import InventoryPage from "../pages/inventory";
 import LoginPage from "../pages/login";
-import InventoryItemPage from "../pages/inventoryItem";
-import CartPage from "../pages/cart";
 
 /**
  * Navigate to https://www.saucedemo.com/
@@ -10,6 +8,7 @@ import CartPage from "../pages/cart";
  * Click the "Login" button
  *  See the sort container appears
  */
+
 test("Log in with standard user credentials", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const inventoryPage = new InventoryPage(page);
@@ -26,9 +25,9 @@ test("Log in with standard user credentials", async ({ page }) => {
       "placeholder"
     );
     await loginPage.goto();
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
   });
   await test.step('Click "Login" button and see the Inventory page', async () => {
@@ -66,9 +65,9 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
     const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
       "placeholder"
     );
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill("wrongPassword");
   });
   await test.step(`Click "Login" button and see user didn't log in`, async () => {
@@ -79,7 +78,7 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
       loginPage.messages.invalidCredentials
     );
     //  See the user was not redirected to other page
-    await expect(page.url()).toBe(process.env.BASE_URL);
+    expect(page.url()).toBe(process.env.BASE_URL);
   });
   await test.step("Close the error message", async () => {
     // Click the error message Clode (X) button
@@ -111,9 +110,9 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
     const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
       "placeholder"
     );
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill("wrongUserName");
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
   });
 
@@ -156,9 +155,9 @@ test("Log in with locked out valid user credentials", async ({ page }) => {
     const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
       "placeholder"
     );
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.LOCKED_OUT_USER_NAME!);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
   });
 
@@ -204,9 +203,9 @@ test("Log in with locked out valid user name and INVALID password credentials", 
       "placeholder"
     );
     await loginPage.goto();
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.LOCKED_OUT_USER_NAME!);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill("wrongPassword");
   });
 
@@ -239,6 +238,7 @@ test("Log in with locked out valid user name and INVALID password credentials", 
 test("SQL Injection vulnerability test", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const sqlInjection = "' OR '1'='1";
+  await page.context().clearCookies();
 
   await test.step('Set the SQL injection data to "Username" and "Password" input fields', async () => {
     // Navigate to https://www.saucedemo.com/
@@ -251,9 +251,9 @@ test("SQL Injection vulnerability test", async ({ page }) => {
       "placeholder"
     );
     await loginPage.goto();
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(sqlInjection);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(sqlInjection);
   });
 
@@ -267,7 +267,7 @@ test("SQL Injection vulnerability test", async ({ page }) => {
       loginPage.messages.invalidCredentials
     );
     //  See the user was not redirected to other page
-    await expect(page.url()).toBe(process.env.BASE_URL);
+    expect(page.url()).toBe(process.env.BASE_URL);
   });
 
   await test.step("Close the error message", async () => {
@@ -290,6 +290,7 @@ test("SQL Injection vulnerability test", async ({ page }) => {
 test("XSS vulnerability test", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const xssPayload = "<script>alert('XSS')</script>";
+  await page.context().clearCookies();
 
   await test.step('Set the XSS payload data to "Username" input field and wrong password to "Password" input field', async () => {
     // Navigate to https://www.saucedemo.com/
@@ -302,9 +303,9 @@ test("XSS vulnerability test", async ({ page }) => {
       "placeholder"
     );
     await loginPage.goto();
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(xssPayload);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill("wrongPassword");
   });
 
@@ -330,7 +331,7 @@ test("XSS vulnerability test", async ({ page }) => {
       );
     }
     //  See the user was not redirected to other page
-    await expect(page.url()).toBe(process.env.BASE_URL);
+    expect(page.url()).toBe(process.env.BASE_URL);
   });
 
   await test.step("Close the error message", async () => {
@@ -350,6 +351,7 @@ test("XSS vulnerability test", async ({ page }) => {
 test.skip("Session cookie attributes test", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const inventoryPage = new InventoryPage(page);
+  await page.context().clearCookies();
 
   await test.step('Set valid "Username" and "Password" credentials', async () => {
     // Navigate to https://www.saucedemo.com/
@@ -362,9 +364,9 @@ test.skip("Session cookie attributes test", async ({ page }) => {
       "placeholder"
     );
     await loginPage.goto();
-    await expect(userNameInputPlaceholder).toEqual("Username");
+    expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
-    await expect(passwordInputPlaceholder).toEqual("Password");
+    expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
   });
 
@@ -376,7 +378,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
     //  See the session cookies has Secure and HttpOnly attributes
     try {
       const cookies = await page.context().cookies();
-      await expect(
+      expect(
         cookies.some(
           (cookie) =>
             cookie.name === "session-username" &&
@@ -399,43 +401,53 @@ test.skip("Session cookie attributes test", async ({ page }) => {
  *  See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
  * Navigate to https://www.saucedemo.com/cart.html without logging in
  *  See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
+ * Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in
+ *  See the "Epic sadface: You can only access '/checkout-step-one.html' when you are logged in" error message appears
  *  See user didn't log in
  * Click the error message Clode (X) button
  *  See the error message disappears
  */
-test("Navigate Inventory, Inventory Items and Cart page without logging in", async ({
+test("Navigate Inventory, Inventory Items, Cart and Checkout pages without logging in", async ({
   page,
 }) => {
-  const inventoryPage = new InventoryPage(page);
-  const inventoryItemPage = new InventoryItemPage(page);
   const loginPage = new LoginPage(page);
-  const cartPage = new CartPage(page);
   await page.context().clearCookies();
 
-  // Navigate to https://www.saucedemo.com/inventory.html without logging in
-  await inventoryPage.goto();
-  //  See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
-  await expect(loginPage.errorMessageContainer).toHaveText(
-    loginPage.messages.loggedOutInventoryPageNavigate
-  );
-
-  // Navigate to https://www.saucedemo.com/inventory-item.html without logging in
-  await inventoryItemPage.goto();
-  //  See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
-  await expect(loginPage.errorMessageContainer).toHaveText(
-    loginPage.messages.loggedOutInventoryItemPageNavigate
-  );
-
-  // Navigate to https://www.saucedemo.com/cart.html without logging in
-  await cartPage.goto();
-  //  See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
-  await expect(loginPage.errorMessageContainer).toHaveText(
-    loginPage.messages.loggedOutCartPageNavigate
-  );
-
-  // Click the error message Clode (X) button
-  //  See the error message disappears
-  await loginPage.closeErrorMessage();
+  await test.step(`Navigate to https://www.saucedemo.com/inventory.html without logging in`, async () => {
+    await page.goto(process.env.INVENTORY_PAGE_URL!);
+    //  See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(
+      loginPage.messages.loggedOutInventoryPageNavigate
+    );
+  });
+  await test.step(`Navigate to https://www.saucedemo.com/inventory-item.html without logging in`, async () => {
+    await page.goto(process.env.INVENTORY_ITEM_PAGE_URL!);
+    //  See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(
+      loginPage.messages.loggedOutInventoryItemPageNavigate
+    );
+  });
+  await test.step(`Navigate to https://www.saucedemo.com/cart.html without logging in`, async () => {
+    // Navigate to https://www.saucedemo.com/cart.html without logging in
+    await page.goto(process.env.YOUR_CART_PAGE_URL!);
+    //  See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(
+      loginPage.messages.loggedOutCartPageNavigate
+    );
+  });
+  await test.step(`Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in`, async () => {
+    // Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in
+    await page.goto(process.env.CHECKOUT_PAGE_URL!);
+    //  See the "Epic sadface: You can only access '/checkout-step-one.html' when you are logged in" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(
+      loginPage.messages.loggedOutCheckoutPageNavigate
+    );
+  });
+  await test.step(`Close the error message`, async () => {
+    // Click the error message Clode (X) button
+    //  See the error message disappears
+    await loginPage.closeErrorMessage();
+  });
 });
 
 async function closeErrorMessage(loginPage) {
