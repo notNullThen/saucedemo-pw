@@ -353,7 +353,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   await page.context().clearCookies();
 
-  await test.step('Set valid "Username" and "Password" credentials', async () => {
+  await test.step("Log in with valid user credentials", async () => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set valid "Username" and "Password" credentials
@@ -368,13 +368,13 @@ test.skip("Session cookie attributes test", async ({ page }) => {
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
     expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
-  });
-
-  await test.step("See the session cookies has Secure and HttpOnly attributes", async () => {
     // Click the "Login" button
     await page.getByTestId("login-button").click();
     //  See the sort container appears
     await expect(inventoryPage.sortContainer).toBeVisible();
+  });
+
+  await test.step("See the session cookies has Secure and HttpOnly attributes", async () => {
     //  See the session cookies has Secure and HttpOnly attributes
     try {
       const cookies = await page.context().cookies();
@@ -388,7 +388,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
       ).toBeTruthy();
     } catch (error) {
       throw new Error(
-        'The session cookies have not "Secure" and "HttpOnly" attributes'
+        'The session cookies have no "Secure" or/and "HttpOnly" attributes'
       );
     }
   });

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import InventoryPage from "../pages/inventory";
 import InventoryItemPage from "../pages/inventoryItem";
 import YourCartPage from "../pages/yourCart";
-import { faker } from "@faker-js/faker";
+import customer from "../fixtures/customer.json";
 import calculatePrices from "../support/calculatePrices";
 import CheckoutPage from "../pages/checkout";
 
@@ -78,11 +78,13 @@ test("User should be able to buy one item", async ({ page }) => {
   });
 
   await test.step("Fill the required data with valid details", async () => {
-    await checkoutPage.yourInformation.fillData({
+    // If you want to use "faker-js", use the commented block instead of fixture usage
+    /* await checkoutPage.yourInformation.fillData({
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       postalCode: faker.location.zipCode(),
-    });
+    }); */
+    await checkoutPage.yourInformation.fillData(customer);
   });
 
   await test.step("Validate shopping cart counter behavoir", async () => {
@@ -124,10 +126,10 @@ test("User should be able to buy one item", async ({ page }) => {
     // Click "Finish" button
     await checkoutPage.overview.finish();
     //  See the checkout greeting appears and has proper text
-    await expect(await checkoutPage.completed.checkoutGreeting).toContainText(
+    await expect(checkoutPage.completed.checkoutGreeting).toContainText(
       "Thank you for your order!"
     );
-    await expect(await checkoutPage.completed.checkoutGreeting).toContainText(
+    await expect(checkoutPage.completed.checkoutGreeting).toContainText(
       "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
     );
     // Click "Back home" button
