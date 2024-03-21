@@ -129,7 +129,7 @@ npx playwright test
     - See the session cookies have Secure and HttpOnly attributes
 
 
-#### Navigate Inventory, Inventory Items and Cart page without logging in
+#### Navigate Products, Item and Cart page without logging in
 
 1. Navigate to https://www.saucedemo.com/inventory.html without logging in
     - See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
@@ -144,7 +144,7 @@ npx playwright test
     - See the error message disappears
 
 
-## Inventory
+## Products
 
 ### User should be able to buy one item
 
@@ -210,7 +210,7 @@ The following test cases are considered high priority for the e-commerce website
 
 ### ***Functionality Verification***
 
-- **Navigate Inventory, Inventory Items, and Cart page without logging in**: Confirms that non-authenticated users cannot access restricted areas, preserving the integrity of the website.
+- **Navigate Products, Item, and Cart page without logging in**: Confirms that non-authenticated users cannot access restricted areas, preserving the integrity of the website.
 
 
 ### ***Data Accuracy***

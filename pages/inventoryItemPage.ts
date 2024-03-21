@@ -1,7 +1,7 @@
 import { Locator, expect, type Page } from "@playwright/test";
 import AbstractPage from "./abstractPage";
 
-export default class InventoryItemPage extends AbstractPage {
+export default class ItemPage extends AbstractPage {
   protected page: Page;
   readonly itemName: Locator;
   readonly itemDescription: Locator;
@@ -18,7 +18,7 @@ export default class InventoryItemPage extends AbstractPage {
   }
 
   async goto(id?: string) {
-    await this.page.goto(`${process.env.INVENTORY_ITEM_PAGE_URL}?id=${id}`);
+    await this.page.goto(`${process.env.ITEM_PAGE_URL}?id=${id}`);
   }
   async backToProducts() {
     await this.page.getByTestId("back-to-products").click();

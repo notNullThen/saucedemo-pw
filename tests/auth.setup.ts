@@ -1,6 +1,6 @@
 import { test as setup, expect } from "@playwright/test";
-import LoginPage from "../pages/login";
-import InventoryPage from "../pages/inventory";
+import LoginPage from "../pages/loginPage";
+import ProductsPage from "../pages/productsPage";
 
 const authFile = "playwright/.auth/user.json";
 
@@ -11,6 +11,6 @@ setup("Authentication setup", async ({ page }) => {
     userName: process.env.STANDARD_USER_NAME!,
     password: process.env.PASSWORD!,
   });
-  await expect(new InventoryPage(page).sortContainer).toBeVisible();
+  await expect(new ProductsPage(page).sortContainer).toBeVisible();
   await page.context().storageState({ path: authFile });
 });

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import InventoryPage from "../pages/inventory";
-import LoginPage from "../pages/login";
+import ProductsPage from "../pages/productsPage";
+import LoginPage from "../pages/loginPage";
 
 /**
  * Navigate to https://www.saucedemo.com/
@@ -11,19 +11,17 @@ import LoginPage from "../pages/login";
 
 test("Log in with standard user credentials", async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const inventoryPage = new InventoryPage(page);
+  const productsPage = new ProductsPage(page);
   await page.context().clearCookies();
 
   await test.step("Log in with valid user name and INVALID password", async () => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Fill the "Username" and "Password" fields with valid credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     await loginPage.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
@@ -35,7 +33,7 @@ test("Log in with standard user credentials", async ({ page }) => {
     await page.getByTestId("login-button").click();
     //  See the sort container appears
     try {
-      await expect(inventoryPage.sortContainer).toBeVisible();
+      await expect(productsPage.sortContainer).toBeVisible();
     } catch (error) {
       throw new Error("User wasn't redirected to Inventory page");
     }
@@ -59,12 +57,10 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the valid "Username" and INVALID "Password" credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
     expect(passwordInputPlaceholder).toEqual("Password");
@@ -104,12 +100,10 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the valid "Username" and INVALID "Password" credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill("wrongUserName");
     expect(passwordInputPlaceholder).toEqual("Password");
@@ -149,12 +143,10 @@ test("Log in with locked out valid user credentials", async ({ page }) => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the locked user valid credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.LOCKED_OUT_USER_NAME!);
     expect(passwordInputPlaceholder).toEqual("Password");
@@ -196,12 +188,10 @@ test("Log in with locked out valid user name and INVALID password credentials", 
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the valid "Username" and INVALID "Password" credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     await loginPage.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.LOCKED_OUT_USER_NAME!);
@@ -244,12 +234,10 @@ test("SQL Injection vulnerability test", async ({ page }) => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the SQL injection data to "Username" and "Password" input fields
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     await loginPage.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(sqlInjection);
@@ -296,12 +284,10 @@ test("XSS vulnerability test", async ({ page }) => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the XSS payload data to "Username" input field and wrong password to "Password" input field
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     await loginPage.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(xssPayload);
@@ -350,19 +336,17 @@ test("XSS vulnerability test", async ({ page }) => {
  */
 test.skip("Session cookie attributes test", async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const inventoryPage = new InventoryPage(page);
+  const productsPage = new ProductsPage(page);
   await page.context().clearCookies();
 
   await test.step("Log in with valid user credentials", async () => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set valid "Username" and "Password" credentials
-    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder =
+      await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder =
+      await loginPage.passwordInput.getAttribute("placeholder");
     await loginPage.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
@@ -371,7 +355,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
     // Click the "Login" button
     await page.getByTestId("login-button").click();
     //  See the sort container appears
-    await expect(inventoryPage.sortContainer).toBeVisible();
+    await expect(productsPage.sortContainer).toBeVisible();
   });
 
   await test.step("See the session cookies has Secure and HttpOnly attributes", async () => {
@@ -414,17 +398,17 @@ test("Navigate Inventory, Inventory Items, Cart and Checkout pages without loggi
   await page.context().clearCookies();
 
   await test.step(`Navigate to https://www.saucedemo.com/inventory.html without logging in`, async () => {
-    await page.goto(process.env.INVENTORY_PAGE_URL!);
+    await page.goto(process.env.PRODUCTS_PAGE_URL!);
     //  See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(
-      loginPage.messages.loggedOutInventoryPageNavigate
+      loginPage.messages.loggedOutProductsPageNavigate
     );
   });
   await test.step(`Navigate to https://www.saucedemo.com/inventory-item.html without logging in`, async () => {
-    await page.goto(process.env.INVENTORY_ITEM_PAGE_URL!);
+    await page.goto(process.env.ITEM_PAGE_URL!);
     //  See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(
-      loginPage.messages.loggedOutInventoryItemPageNavigate
+      loginPage.messages.loggedOutItemPageNavigate
     );
   });
   await test.step(`Navigate to https://www.saucedemo.com/cart.html without logging in`, async () => {

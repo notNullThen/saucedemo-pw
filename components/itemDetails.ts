@@ -16,4 +16,20 @@ export default class ItemDetails {
     this.itemsImages = page.locator("img.inventory_item_img");
     this.cartQuantity = page.locator(".cart_quantity");
   }
+
+  getItemName(index: number) {
+    return this.itemsNames.nth(index).textContent();
+  }
+  async getItemDescription(index: number) {
+    return await this.itemsDescriptions.nth(index).textContent();
+  }
+  getItemPrice(index: number) {
+    return this.itemsPrices.nth(index).textContent();
+  }
+  getItemImage(index: number) {
+    return this.itemsImages.nth(index).textContent();
+  }
+  getCartQuantity(index: number) {
+    return this.cartQuantity.nth(index).textContent();
+  }
 }

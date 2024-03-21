@@ -18,8 +18,8 @@ export default class LoginPage {
       "Epic sadface: Username and password do not match any user in this service",
     lockedOutUserCredentials:
       "Epic sadface: Sorry, this user has been locked out.",
-    loggedOutInventoryPageNavigate: `Epic sadface: You can only access '/${process.env.INVENTORY_PAGE_URL}' when you are logged in.`,
-    loggedOutInventoryItemPageNavigate: `Epic sadface: You can only access '/${process.env.INVENTORY_ITEM_PAGE_URL}' when you are logged in.`,
+    loggedOutProductsPageNavigate: `Epic sadface: You can only access '/${process.env.PRODUCTS_PAGE_URL}' when you are logged in.`,
+    loggedOutItemPageNavigate: `Epic sadface: You can only access '/${process.env.ITEM_PAGE_URL}' when you are logged in.`,
     loggedOutCartPageNavigate: `Epic sadface: You can only access '/${process.env.YOUR_CART_PAGE_URL}' when you are logged in.`,
     loggedOutCheckoutPageNavigate: `Epic sadface: You can only access '/${process.env.CHECKOUT_PAGE_URL}' when you are logged in.`,
   };

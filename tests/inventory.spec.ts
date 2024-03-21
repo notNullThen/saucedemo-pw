@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import InventoryPage from "../pages/inventory";
-import InventoryItemPage from "../pages/inventoryItem";
-import YourCartPage from "../pages/yourCart";
+import ProductsPage, { ItemInfo } from "../pages/productsPage";
+import ItemPage from "../pages/inventoryItemPage";
+import YourCartPage from "../pages/yourCartPage";
 import customer from "../fixtures/customer.json";
 import calculatePrices from "../support/calculatePrices";
-import CheckoutPage from "../pages/checkout";
+import CheckoutPage from "../pages/checkoutPage";
 
 const errorMessages = {
   shoppingCartCounterNumberError: `Shopping cart counter didn't show the correct number after user added the item to cart`,
@@ -30,42 +30,39 @@ const errorMessages = {
  *  See the page title is "Products"
  */
 test("User should be able to buy one item", async ({ page }) => {
-  const inventoryPage = new InventoryPage(page);
+  const productsPage = new ProductsPage(page);
   const yourCartPage = new YourCartPage(page);
   const checkoutPage = new CheckoutPage(page);
-  interface ItemDetails {
-    name: string | null;
-    description: string | null;
-    price: string | null;
-  }
-  const inventoryItem: ItemDetails = { name: "", description: "", price: "" };
-  const cartItem: ItemDetails = { name: "", description: "", price: "" };
-  const checkoutItem: ItemDetails = { name: "", description: "", price: "" };
+
+  const inventoryItem: ItemInfo = { name: "", description: "", price: "" };
+  const cartItem: ItemInfo = { name: "", description: "", price: "" };
+  const checkoutItem: ItemInfo = { name: "", description: "", price: "" };
 
   await test.step("Add item to cart", async () => {
     // Go to /inventory.html
-    await inventoryPage.goto();
+    await productsPage.goto();
     //  See Item Name, Description, Price & Image URL are valid
-    inventoryItem.name = await inventoryPage.itemDetails.itemsNames
+    inventoryItem.name = await productsPage.itemDetails.itemsNames
       .first()
       .textContent();
-    inventoryItem.description =
-      await inventoryPage.itemDetails.itemsDescriptions.first().textContent();
-    inventoryItem.price = await inventoryPage.itemDetails.itemsPrices
+    inventoryItem.description = await productsPage.itemDetails.itemsDescriptions
+      .first()
+      .textContent();
+    inventoryItem.price = await productsPage.itemDetails.itemsPrices
       .first()
       .textContent();
 
     // Click item "Add to cart" button
-    await inventoryPage.addToCartButtons.first().click();
+    await productsPage.addItemToCart(0);
     //  See the Shopping cart "1" counter appears
-    await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
+    await expect(productsPage.shoppingCart.counter).toHaveText("1");
   });
 
   await test.step("Go to shopping cart and validate product details", async () => {
     // Click the Shopping cart
-    await inventoryPage.shoppingCart.click();
+    await productsPage.shoppingCart.click();
     //  See the Shopping cart has "1" counter
-    await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
+    await expect(productsPage.shoppingCart.counter).toHaveText("1");
     //  See Item Name, Image URL & Description are valid
     cartItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
     cartItem.description =
@@ -93,7 +90,7 @@ test("User should be able to buy one item", async ({ page }) => {
     await checkoutPage.yourInformation.continue();
     //  See the Shopping cart has "1" counter
     try {
-      await expect(inventoryPage.shoppingCart.counter).toHaveText("1");
+      await expect(productsPage.shoppingCart.counter).toHaveText("1");
     } catch (error) {
       throw new Error(errorMessages.shoppingCartCounterNumberError);
     }
@@ -139,11 +136,47 @@ test("User should be able to buy one item", async ({ page }) => {
 });
 
 // TODO:
-/*
 test("User should be able to buy multiple items", async ({ page }) => {
-  // Validate Cart prices summing
+  const productsPage = new ProductsPage(page);
+  const yourCartPage = new YourCartPage(page);
+  const inventoryItems: ItemInfo[] = [];
+
+  await productsPage.goto();
+  const itemsCount = await productsPage.items.count();
+
+  await test.step(`Add all items to basket`, async () => {
+    for (let index = 0; index < itemsCount; index++) {
+      await productsPage.addItemToCart(index);
+      const name = await productsPage.itemDetails.getItemName(index);
+      const description =
+        await productsPage.itemDetails.getItemDescription(index);
+      const price = await productsPage.itemDetails.getItemPrice(index);
+
+      inventoryItems.push({ name, description, price });
+    }
+  });
+
+  await test.step(`Go to shopping cart and validate details`, async () => {
+    await productsPage.shoppingCart.click();
+
+    for (let index = 0; index < itemsCount; index++) {
+      const name = await yourCartPage.itemDetails.getItemName(index);
+      const description =
+        await yourCartPage.itemDetails.getItemDescription(index);
+      const price = await yourCartPage.itemDetails.getItemPrice(index);
+
+      try {
+        expect(inventoryItems[index].name).toEqual(name);
+        expect(inventoryItems[index].description).toEqual(description);
+        expect(inventoryItems[index].price).toEqual(price);
+      } catch (error) {
+        throw new Error(
+          `Item #${index + 1} Shopping cart page details differ from Products page details`
+        );
+      }
+    }
+  });
 });
-*/
 
 /**
  * Navigate to /inventory.html
@@ -157,31 +190,31 @@ test("User should be able to buy multiple items", async ({ page }) => {
 test("All items details should correspond to its details page", async ({
   page,
 }) => {
-  const inventoryPage = new InventoryPage(page);
-  const inventoryItemPage = new InventoryItemPage(page);
+  const productsPage = new ProductsPage(page);
+  const inventoryItemPage = new ItemPage(page);
   // Navigate to /inventory.html
-  await inventoryPage.goto();
-  const itemsCount = await page.locator(".inventory_item").count();
+  await productsPage.goto();
+  const itemsCount = await productsPage.items.count();
 
   for (let index = 0; index < itemsCount; index++) {
     await test.step(`The item #${
       index + 1
     } details should correspond to its details page`, async () => {
       // Get item Name, Description, Price & Image URL
-      const itemName = await inventoryPage.itemDetails.itemsNames
+      const itemName = await productsPage.itemDetails.itemsNames
         .nth(index)
         .textContent();
-      const itemDescription = await inventoryPage.itemDetails.itemsDescriptions
+      const itemDescription = await productsPage.itemDetails.itemsDescriptions
         .nth(index)
         .textContent();
-      const itemPrice = await inventoryPage.itemDetails.itemsPrices
+      const itemPrice = await productsPage.itemDetails.itemsPrices
         .nth(index)
         .textContent();
-      const itemImageURL = await inventoryPage.itemDetails.itemsImages
+      const itemImageURL = await productsPage.itemDetails.itemsImages
         .nth(index)
         .getAttribute("src");
       // Click item name
-      await inventoryPage.itemDetails.itemsNames.nth(index).click();
+      await productsPage.itemDetails.itemsNames.nth(index).click();
 
       //  See Item Name, Image URL & Description are valid
       const itemDetailsName = await inventoryItemPage.itemName.textContent();

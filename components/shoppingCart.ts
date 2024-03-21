@@ -2,7 +2,7 @@ import { Locator, Page, expect } from "@playwright/test";
 
 export default class ShoppingCart {
   protected page: Page;
-  protected body: Locator;
+  readonly body: Locator;
   readonly counter: Locator;
 
   constructor(page: Page) {
