@@ -15,4 +15,8 @@ export default class ShoppingCart {
     await this.body.click();
     await expect(this.page.locator(".title")).toHaveText("Your Cart");
   }
+
+  async getCounterNumber() {
+    return Number(await this.counter.textContent());
+  }
 }

@@ -153,17 +153,48 @@ npx playwright test
 2. Click item "Add to cart" button
     - See the Shopping cart "1" counter appears
 3. Click the Shopping cart
+    - See the title is "Your Cart"
     - See the Shopping cart has "1" counter
     - See Item Name, Image URL & Description are valid
-4. Fill the required data with valid details
-5. Click "Continue" button
+4. Click "Checkout" button
+    - See the title is "Checkout: Your Information"
+5. Fill the required data with valid details
+6. Click "Continue" button
     - See no error message appears
+    - See the title is "Checkout: Overview"
     - See the Shopping cart has "1" counter
     - See Item Name, Price & Description are valid
     - See product has correct price and tax
-6. Click "Finish" button
+7. Click "Finish" button
+    - See the title is "Checkout: Complete!"
     - See the checkout greeting appears and has proper text
-7. Click "Back home" button
+8. Click "Back home" button
+    - See the page title is "Products"
+
+
+### User should be able to buy multiple items
+
+1. Go to /inventory.html
+2. Click "Add to cart" button for each item
+    - See the Shopping cart counter increases
+3. Click the Shopping cart
+    - See the title is "Your Cart"
+    - See the Shopping cart counter didn't change
+    - See Item Name, Image URL & Description are valid
+4. Click "Checkout" button
+    - See the title is "Checkout: Your Information"
+5. Fill the required data with valid details
+6. Click "Continue" button
+    - See no error message appears
+    - See the title is "Checkout: Overview"
+    - See the Shopping cart counter didn't change
+    - See Item Name, Price & Description are valid
+7. Sum the total price value
+    - See product has correct price and tax
+8. Click "Finish" button
+    - See the title is "Checkout: Complete!"
+    - See the checkout greeting appears and has proper text
+9. Click "Back home" button
     - See the page title is "Products"
 
 
@@ -185,7 +216,7 @@ The following test cases are considered high priority for the e-commerce website
 
 ### ***Critical Business Logic***
 
-- **User should be able to buy one item**: Covers the end-to-end process of selecting a product and completing a purchase, which is directly tied to the website's revenue.
+- **User should be able to buy one / multiple items**: Covers the end-to-end process of selecting product(s) and completing a purchase, which is directly tied to the website's revenue.
 
 
 ### ***Security and Access Control***

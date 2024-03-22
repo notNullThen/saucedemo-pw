@@ -37,32 +37,24 @@ export default class ProductsPage extends AbstractPage {
     await expect(this.pageTitle).toHaveText("Products");
   }
   async addItemToCart(index: number) {
-    const cartCounterBeforeAdd = Number(
-      await this.shoppingCart.body.textContent()
-    );
+    const cartCounterBeforeAdd = Number(await this.shoppingCart.body.textContent());
     try {
       await this.getAddToCartButton(index).click();
     } catch (error) {
       throw new Error(`The item #${index + 1} might be already added to cart`);
     }
-    const cartCounterAfterAdd = Number(
-      await this.shoppingCart.body.textContent()
-    );
+    const cartCounterAfterAdd = await this.shoppingCart.getCounterNumber();
     expect(cartCounterAfterAdd).toEqual(cartCounterBeforeAdd + 1);
     await expect(this.getRemoveButton(index)).toBeAttached();
   }
   async removeItemFromCart(index: number) {
-    const cartCounterBeforeRemove = Number(
-      await this.shoppingCart.body.textContent()
-    );
+    const cartCounterBeforeRemove = await this.shoppingCart.getCounterNumber();
     try {
       await this.getRemoveButton(index).click();
     } catch (error) {
       throw new Error(`The item #${index + 1} might be not added to cart`);
     }
-    const cartCounterAfterRemove = Number(
-      await this.shoppingCart.body.textContent()
-    );
+    const cartCounterAfterRemove = Number(await this.shoppingCart.body.textContent());
     expect(cartCounterAfterRemove).toEqual(cartCounterBeforeRemove - 1);
   }
 }

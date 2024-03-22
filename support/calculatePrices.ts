@@ -1,3 +1,5 @@
+import getPriceValue from "./getPriceValue";
+
 /**
  * Calculates the 8% tax amount and total price including tax based on the input price.
  * @param price The input price as a number, string, or null. If it's a string, it should include a dollar sign.
@@ -11,23 +13,12 @@
  */
 export default function (price: number | string | null) {
   let priceNum: number;
-  if (typeof price === "string")
-    priceNum = Number(price?.toString().replace("$", ""));
+  // Extract the numeric value of the price
+  if (typeof price === "string") priceNum = getPriceValue(price);
   else if (typeof price === "number") priceNum = price;
-  else
-    throw new Error(
-      `calculatePrices method got 'price' variable which has "null" type`
-    );
-
+  else throw new Error(`calculatePrices method got 'price' variable which has "null" type`);
+  // Calculate values
   const taxPrice = priceNum * 0.08;
-  const taxPriceFormatted = Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(taxPrice);
   const priceWithTax = priceNum + taxPrice;
-  const priceWithTaxFormatted = Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(priceWithTax);
-  return { taxPriceFormatted, priceWithTaxFormatted };
+  return { taxPrice, priceWithTax };
 }

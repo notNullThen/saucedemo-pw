@@ -18,15 +18,9 @@ class YourInformation extends AbstractPage {
     this.errorMessage = page.getByTestId("error");
   }
 
-  async fillData({
-    firstName,
-    lastName,
-    postalCode,
-  }: {
-    firstName: string;
-    lastName: string;
-    postalCode: string;
-  }) {
+  async fillData(itemDetails: { firstName: string; lastName: string; postalCode: string }) {
+    const { firstName, lastName, postalCode } = itemDetails;
+
     await this.firstNameInput.fill(firstName);
     await this.lastNameInput.fill(lastName);
     await this.postalCodeInput.fill(postalCode);
@@ -51,13 +45,13 @@ class Overview extends AbstractPage {
     this.itemDetails = new ItemDetails(page);
   }
 
-  get itemTotalPrice() {
+  get totalPrice() {
     return this.page.locator(".summary_subtotal_label").textContent();
   }
-  get itemTaxPrice() {
+  get taxPrice() {
     return this.page.locator(".summary_tax_label").textContent();
   }
-  get itemTotalPriceWithTax() {
+  get totalPriceWithTax() {
     return this.page.locator(".summary_total_label").textContent();
   }
 

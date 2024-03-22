@@ -14,26 +14,24 @@ export default class LoginPage {
   }
 
   messages = {
-    invalidCredentials:
-      "Epic sadface: Username and password do not match any user in this service",
-    lockedOutUserCredentials:
-      "Epic sadface: Sorry, this user has been locked out.",
-    loggedOutProductsPageNavigate: `Epic sadface: You can only access '/${process.env.PRODUCTS_PAGE_URL}' when you are logged in.`,
-    loggedOutItemPageNavigate: `Epic sadface: You can only access '/${process.env.ITEM_PAGE_URL}' when you are logged in.`,
-    loggedOutCartPageNavigate: `Epic sadface: You can only access '/${process.env.YOUR_CART_PAGE_URL}' when you are logged in.`,
-    loggedOutCheckoutPageNavigate: `Epic sadface: You can only access '/${process.env.CHECKOUT_PAGE_URL}' when you are logged in.`,
+    invalidCredentials: "Epic sadface: Username and password do not match any user in this service",
+    lockedOutUserCredentials: "Epic sadface: Sorry, this user has been locked out.",
+    loggedOutProductsPageNavigate: `Epic sadface: You can only access '/${process.env.PRODUCTS_PAGE_URL}'
+    when you are logged in.`,
+    loggedOutItemPageNavigate: `Epic sadface: You can only access '/${process.env.ITEM_PAGE_URL}'
+    when you are logged in.`,
+    loggedOutCartPageNavigate: `Epic sadface: You can only access '/${process.env.YOUR_CART_PAGE_URL}'
+    when you are logged in.`,
+    loggedOutCheckoutPageNavigate: `Epic sadface: You can only access '/${process.env.CHECKOUT_PAGE_URL}'
+    when you are logged in.`,
   };
 
   async goto() {
     await this.page.goto("/");
   }
   async login({ userName, password }: { userName: string; password: string }) {
-    const userNameInputPlaceholder = await this.userNameInput.getAttribute(
-      "placeholder"
-    );
-    const passwordInputPlaceholder = await this.passwordInput.getAttribute(
-      "placeholder"
-    );
+    const userNameInputPlaceholder = await this.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder = await this.passwordInput.getAttribute("placeholder");
     await this.goto();
     expect(userNameInputPlaceholder).toEqual("Username");
     await this.userNameInput.fill(userName);
