@@ -149,13 +149,13 @@ npx playwright test
 ### User should be able to buy one item
 
 1. Go to /inventory.html
-    - See Item Name, Description, Price & Image URL are valid
+    - See Item Name, Price & Description are valid
 2. Click item "Add to cart" button
     - See the Shopping cart "1" counter appears
 3. Click the Shopping cart
     - See the title is "Your Cart"
     - See the Shopping cart has "1" counter
-    - See Item Name, Image URL & Description are valid
+    - See Item Name, Price & Description are valid
 4. Click "Checkout" button
     - See the title is "Checkout: Your Information"
 5. Fill the required data with valid details
@@ -180,7 +180,7 @@ npx playwright test
 3. Click the Shopping cart
     - See the title is "Your Cart"
     - See the Shopping cart counter didn't change
-    - See Item Name, Image URL & Description are valid
+    - See Item Name, Price & Description are valid
 4. Click "Checkout" button
     - See the title is "Checkout: Your Information"
 5. Fill the required data with valid details

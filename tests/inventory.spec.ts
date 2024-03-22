@@ -15,7 +15,7 @@ import formatPrice from "../support/formatPrice";
  * Click the Shopping cart
  *  See the title is "Your Cart"
  *  See the Shopping cart has "1" counter
- *  See Item Name, Image URL & Description are valid
+ *  See Item Name, Price & Description are valid
  * Click "Checkout" button
  *  See the title is "Checkout: Your Information"
  * Fill the required data with valid details
@@ -62,7 +62,7 @@ test("User should be able to buy one item", async ({ page }) => {
     cartItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
     cartItem.description = await yourCartPage.itemDetails.itemsDescriptions.textContent();
     cartItem.price = await yourCartPage.itemDetails.itemsPrices.textContent();
-    //  See Item Name, Image URL & Description are valid
+    //  See Item Name, Price & Description are valid
     expect(cartItem.name).toEqual(inventoryItem.name);
     expect(cartItem.description).toEqual(inventoryItem.description);
     expect(cartItem.price).toEqual(inventoryItem.price);
@@ -122,7 +122,7 @@ test("User should be able to buy one item", async ({ page }) => {
  * Click the Shopping cart
  *  See the title is "Your Cart"
  *  See the Shopping cart counter didn't change
- *  See Item Name, Image URL & Description are valid
+ *  See Item Name, Price & Description are valid
  * Click "Checkout" button
  *  See the title is "Checkout: Your Information"
  * Fill the required data with valid details
@@ -173,7 +173,7 @@ test("User should be able to buy multiple items", async ({ page }) => {
       const name = await yourCartPage.itemDetails.getItemName(index);
       const description = await yourCartPage.itemDetails.getItemDescription(index);
       const price = await yourCartPage.itemDetails.getItemPrice(index);
-      //  See Item Name, Image URL & Description are valid
+      //  See Item Name, Price & Description are valid
       try {
         expect(inventoryItems[index].name).toEqual(name);
         expect(inventoryItems[index].description).toEqual(description);
@@ -207,9 +207,13 @@ test("User should be able to buy multiple items", async ({ page }) => {
         const description = await checkoutPage.overview.itemDetails.getItemDescription(index);
         const price = await checkoutPage.overview.itemDetails.getItemPrice(index);
         //  See Item Name, Price & Description are valid
-        expect(inventoryItems[index].name).toEqual(name);
-        expect(inventoryItems[index].description).toEqual(description);
-        expect(inventoryItems[index].price).toEqual(price);
+        try {
+          expect(inventoryItems[index].name).toEqual(name);
+          expect(inventoryItems[index].description).toEqual(description);
+          expect(inventoryItems[index].price).toEqual(price);
+        } catch (error) {
+          throw new Error(`Item #${index + 1} Checkout page details differ from Products page details`);
+        }
         // Sum the total price value
         totalPrice += getPriceValue(price);
       }
