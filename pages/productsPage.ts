@@ -1,7 +1,6 @@
 import { Locator, expect, type Page } from "@playwright/test";
 import ItemDetails from "../components/itemDetails";
 import AbstractPage from "./abstractPage";
-import ShoppingCart from "../components/shoppingCart";
 
 export interface ItemInfo {
   name: string | null;
@@ -12,7 +11,6 @@ export interface ItemInfo {
 export default class ProductsPage extends AbstractPage {
   protected page: Page;
   readonly sortContainer: Locator;
-  readonly shoppingCart: ShoppingCart;
   readonly itemDetails: ItemDetails;
   readonly items: Locator;
 
@@ -20,7 +18,6 @@ export default class ProductsPage extends AbstractPage {
     super(page);
     this.page = page;
     this.sortContainer = page.getByTestId("product_sort_container");
-    this.shoppingCart = new ShoppingCart(page);
     this.itemDetails = new ItemDetails(page);
     this.items = page.locator(".inventory_item");
   }
