@@ -13,7 +13,7 @@ import getPriceValue from "./getPriceValue";
  * priceWithTax = 108
  */
 export default function (price: number | string | null) {
-  assert(price, `calculatePrices method got 'price' variable which has "null" type`);
+  assert(price, `calculatePrices method got empty 'price' variable`);
   let priceNum: number;
   // Extract the numeric value of the price
   if (typeof price === "string") priceNum = getPriceValue(price);
