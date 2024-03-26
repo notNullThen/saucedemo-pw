@@ -7,6 +7,7 @@ import calculatePrices from "../support/calculatePrices";
 import CheckoutPage from "../pages/checkoutPage";
 import getPriceValue from "../support/getPriceValue";
 import formatPrice from "../support/formatPrice";
+import assert from "assert";
 
 /**
  * Go to /inventory.html
@@ -45,8 +46,11 @@ test("User should be able to buy one item", async ({ page }) => {
 
   await test.step("Add item to cart", async () => {
     inventoryItem.name = await productsPage.itemDetails.itemsNames.first().textContent();
+    assert(inventoryItem.name, `There's no name received`);
     inventoryItem.description = await productsPage.itemDetails.itemsDescriptions.first().textContent();
+    assert(inventoryItem.description, `There's no description received`);
     inventoryItem.price = await productsPage.itemDetails.itemsPrices.first().textContent();
+    assert(inventoryItem.price, `There's no price received`);
 
     // Click item "Add to cart" button
     //  See the Shopping cart "1" counter appears

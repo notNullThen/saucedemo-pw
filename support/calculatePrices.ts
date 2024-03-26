@@ -1,3 +1,4 @@
+import assert from "assert";
 import getPriceValue from "./getPriceValue";
 
 /**
@@ -12,11 +13,11 @@ import getPriceValue from "./getPriceValue";
  * priceWithTax = 108
  */
 export default function (price: number | string | null) {
+  assert(price, `calculatePrices method got 'price' variable which has "null" type`);
   let priceNum: number;
   // Extract the numeric value of the price
   if (typeof price === "string") priceNum = getPriceValue(price);
-  else if (typeof price === "number") priceNum = price;
-  else throw new Error(`calculatePrices method got 'price' variable which has "null" type`);
+  else priceNum = price;
   // Calculate values
   const taxPrice = priceNum * 0.08;
   const priceWithTax = priceNum + taxPrice;

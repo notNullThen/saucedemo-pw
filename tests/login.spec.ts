@@ -276,7 +276,7 @@ test("XSS vulnerability test", async ({ page }) => {
     try {
       await expect(page.locator("alert")).toHaveCount(0);
     } catch (error) {
-      throw new Error(`The '${xssPayload}' XSS payload is executed. Alert window appeared.`);
+      throw new Error(`The '${xssPayload}' XSS payload is executed, though it should not. Alert window appeared.`);
     }
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     try {

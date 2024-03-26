@@ -17,7 +17,7 @@ export default class ProductsPage extends AbstractPage {
   constructor(page: Page) {
     super(page);
     this.page = page;
-    this.sortContainer = page.getByTestId("product_sort_container");
+    this.sortContainer = page.getByTestId("product-sort-container");
     this.itemDetails = new ItemDetails(page);
     this.items = page.locator(".inventory_item");
   }
