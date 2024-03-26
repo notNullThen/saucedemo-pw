@@ -57,6 +57,7 @@ npx playwright test
 2. Set the valid "Username" and INVALID "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See the page URL didn't change
     - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
@@ -68,6 +69,7 @@ npx playwright test
 2. Set the INVALID "Username" and valid "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See the page URL didn't change
     - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
@@ -79,6 +81,7 @@ npx playwright test
 2. Set the locked user valid credentials
 3. Click the "Login" button
     - See the "Epic sadface: Sorry, this user has been locked out." error message appears
+    - See the page URL didn't change
     - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears
@@ -90,7 +93,43 @@ npx playwright test
 2. Set the valid "Username" and INVALID "Password" credentials
 3. Click the "Login" button
     - See the "Epic sadface: Username and password do not match any user in this service" error message appears
+    - See the page URL didn't change
     - See user didn't log in
+4. Click the error message Clode (X) button
+    - See the error message disappears
+
+
+#### Log in with empty credentials
+
+1. Navigate to https://www.saucedemo.com/
+    - See the "Username" and "Password" input fields are empty
+2. Click the "Login" button
+    - See the "Epic sadface: Username is required" error message appears
+    - See the page URL didn't change
+3. Click the error message Clode (X) button
+    - See the error message disappears
+
+
+#### Log in with valid user name & empty password credentials
+
+1. Navigate to https://www.saucedemo.com/
+    - See the "Password" input field is empty
+2. Fill the "Username" input field with valid user name
+3. Click the "Login" button
+    - See the "Epic sadface: Password is required" error message appears
+    - See the page URL didn't change
+4. Click the error message Clode (X) button
+    - See the error message disappears
+
+
+#### Log in with empty user name & valid password credentials
+
+1. Navigate to https://www.saucedemo.com/
+    - See the "Username" input field is empty
+2. Fill the "Password" input field with valid password
+3. Click the "Login" button
+    - See the "Epic sadface: Username is required" error message appears
+    - See the page URL didn't change
 4. Click the error message Clode (X) button
     - See the error message disappears
 
@@ -100,8 +139,8 @@ npx playwright test
 1. Navigate to https://www.saucedemo.com/
 2. Set the SQL injection data to "Username" and "Password" input 
 3. Click the "Login" button
-    - See the page URL didn't change
     - See the "Epic sadface: Username and password do not match any 
+    - See the page URL didn't change
     - See user didn't log in
 4. Click the error message Clode (X) button
     - See the error message disappears

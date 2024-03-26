@@ -10,6 +10,7 @@ import formatPrice from "../support/formatPrice";
 import assert from "assert";
 
 /**
+ * @issue
  * Go to /inventory.html
  * Click item "Add to cart" button
  *  See the Shopping cart "1" counter appears
@@ -120,6 +121,7 @@ test("User should be able to buy one item", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Go to /inventory.html
  * Click "Add to cart" button for each item
  *  See the Shopping cart counter increases
@@ -160,8 +162,11 @@ test("User should be able to buy multiple items", async ({ page }) => {
       //  See the Shopping cart counter increases
       await productsPage.addItemToCart(index);
       const name = await productsPage.itemDetails.getItemName(index);
+      assert(name, `There's no name received`);
       const description = await productsPage.itemDetails.getItemDescription(index);
+      assert(description, `There's no description received`);
       const price = await productsPage.itemDetails.getItemPrice(index);
+      assert(price, `There's no price received`);
 
       inventoryItems.push({ name, description, price });
     }
@@ -246,6 +251,7 @@ test("User should be able to buy multiple items", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to /inventory.html
  * Get item Name, Description, Price & Image URL
  * Click item name
@@ -265,9 +271,13 @@ test("All items details should correspond to its details page", async ({ page })
     await test.step(`The item #${index + 1} details should correspond to its details page`, async () => {
       // Get item Name, Description, Price & Image URL
       const itemName = await productsPage.itemDetails.itemsNames.nth(index).textContent();
+      assert(itemName, `There's no item name received`);
       const itemDescription = await productsPage.itemDetails.itemsDescriptions.nth(index).textContent();
+      assert(itemDescription, `There's no item description received`);
       const itemPrice = await productsPage.itemDetails.itemsPrices.nth(index).textContent();
+      assert(itemPrice, `There's no item price received`);
       const itemImageURL = await productsPage.itemDetails.itemsImages.nth(index).getAttribute("src");
+      assert(itemImageURL, `There's no item image URL received`);
       // Click item name
       await productsPage.itemDetails.itemsNames.nth(index).click();
 

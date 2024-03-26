@@ -4,6 +4,7 @@ export default class LoginPage {
   protected page: Page;
   readonly userNameInput: Locator;
   readonly passwordInput: Locator;
+  readonly loginButton: Locator;
   readonly errorMessageContainer: Locator;
 
   constructor(page: Page) {
@@ -11,6 +12,7 @@ export default class LoginPage {
     this.userNameInput = page.getByTestId("username");
     this.passwordInput = page.getByTestId("password");
     this.errorMessageContainer = page.getByTestId("error");
+    this.loginButton = page.getByTestId("login-button");
   }
 
   messages = {
@@ -24,6 +26,8 @@ export default class LoginPage {
     when you are logged in.`,
     loggedOutCheckoutPageNavigate: `Epic sadface: You can only access '/${process.env.CHECKOUT_PAGE_URL}'
     when you are logged in.`,
+    userNameIsRequired: `Epic sadface: Username is required`,
+    passwordIsRequired: `Epic sadface: Password is required`,
   };
 
   async goto() {
@@ -38,7 +42,7 @@ export default class LoginPage {
     expect(passwordInputPlaceholder).toEqual("Password");
     await this.passwordInput.fill(password);
 
-    await this.page.getByTestId("login-button").click();
+    await this.loginButton.click();
   }
   async closeErrorMessage() {
     await this.errorMessageContainer.locator(".error-button").click();

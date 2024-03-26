@@ -3,6 +3,7 @@ import ProductsPage from "../pages/productsPage";
 import LoginPage from "../pages/loginPage";
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Fill the "Username" and "Password" fields with valid credentials
  * Click the "Login" button
@@ -28,7 +29,7 @@ test("Log in with standard user credentials", async ({ page }) => {
   });
   await test.step('Click "Login" button and see the Inventory page', async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the sort container appears
     try {
       await expect(productsPage.sortContainer).toBeVisible();
@@ -39,10 +40,12 @@ test("Log in with standard user credentials", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the valid "Username" and INVALID "Password" credentials
  * Click the "Login" button
  *  See the "Epic sadface: Username and password do not match any user in this service" error message appears
+ *  See the page URL didn't change
  *  See user didn't log in
  * Click the error message Clode (X) button
  *  See the error message disappears
@@ -64,9 +67,11 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
   });
   await test.step(`Click "Login" button and see user didn't log in`, async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.invalidCredentials);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
     //  See the user was not redirected to other page
     expect(page.url()).toBe(process.env.BASE_URL);
   });
@@ -78,6 +83,7 @@ test("Log in with valid user name and INVALID password", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the INVALID "Username" and valid "Password" credentials
  * Click the "Login" button
@@ -90,7 +96,7 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await page.context().clearCookies();
 
-  await test.step('Set the valid "Username" and INVALID "Password" credentials', async () => {
+  await test.step('Set the INVALID "Username" and valid "Password" credentials', async () => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the valid "Username" and INVALID "Password" credentials
@@ -104,9 +110,11 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
 
   await test.step(`Click "Login" button and see user didn't log in`, async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.invalidCredentials);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
 
   await test.step("Close the error message", async () => {
@@ -117,6 +125,7 @@ test("Log in with INVALID user name and valid password", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the locked user valid credentials
  * Click the "Login" button
@@ -143,9 +152,11 @@ test("Log in with locked out valid user credentials", async ({ page }) => {
 
   await test.step(`Click "Login" button and see user didn't log in`, async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the "Epic sadface: Sorry, this user has been locked out." error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.lockedOutUserCredentials);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
 
   await test.step("Close the error message", async () => {
@@ -156,6 +167,7 @@ test("Log in with locked out valid user credentials", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the valid "Username" and INVALID "Password" credentials
  * Click the "Login" button
@@ -168,7 +180,7 @@ test("Log in with locked out valid user name and INVALID password credentials", 
   const loginPage = new LoginPage(page);
   await page.context().clearCookies();
 
-  await test.step('Set the valid "Username" and INVALID "Password" credentials', async () => {
+  await test.step('Set the locked user valid "Username" and INVALID "Password" credentials', async () => {
     // Navigate to https://www.saucedemo.com/
     await loginPage.goto();
     // Set the valid "Username" and INVALID "Password" credentials
@@ -183,9 +195,11 @@ test("Log in with locked out valid user name and INVALID password credentials", 
 
   await test.step(`Click "Login" button and see user didn't log in`, async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.invalidCredentials);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
 
   await test.step("Close the error message", async () => {
@@ -196,11 +210,145 @@ test("Log in with locked out valid user name and INVALID password credentials", 
 });
 
 /**
+ * @issue
+ * Navigate to https://www.saucedemo.com/
+ *  See the "Username" and "Password" input fields are empty
+ * Click the "Login" button
+ *  See the "Epic sadface: Username is required" error message appears
+ *  See the page URL didn't change
+ * Click the error message Clode (X) button
+ *  See the error message disappears
+ */
+test("Log in with empty credentials", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await page.context().clearCookies();
+
+  await test.step('See the "Username" and "Password" input fields are empty', async () => {
+    // Navigate to https://www.saucedemo.com/
+    await loginPage.goto();
+    //  See the "Username" and "Password" input fields are empty
+    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute("placeholder");
+    await loginPage.goto();
+    expect(userNameInputPlaceholder).toEqual("Username");
+    expect(passwordInputPlaceholder).toEqual("Password");
+    expect(loginPage.userNameInput).toBeEmpty();
+    expect(loginPage.passwordInput).toBeEmpty();
+  });
+
+  await test.step(`Click "Login" button and see user didn't log in`, async () => {
+    // Click the "Login" button
+    await loginPage.loginButton.click();
+    //  See the "Epic sadface: Username is required" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.userNameIsRequired);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
+  });
+
+  await test.step("Close the error message", async () => {
+    // Click the error message Clode (X) button
+    //  See the error message disappears
+    await closeErrorMessage(loginPage);
+  });
+});
+
+/**
+ * @issue
+ * Navigate to https://www.saucedemo.com/
+ *  See the "Password" input field is empty
+ * Fill the "Username" input field with valid user name
+ * Click the "Login" button
+ *  See the "Epic sadface: Password is required" error message appears
+ *  See the page URL didn't change
+ * Click the error message Clode (X) button
+ *  See the error message disappears
+ */
+test("Log in with valid user name & empty password credentials", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await page.context().clearCookies();
+
+  await test.step('Set the valid "Username" and empty "Password" credentials', async () => {
+    // Navigate to https://www.saucedemo.com/
+    await loginPage.goto();
+    //  See the "Password" input field is empty
+    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute("placeholder");
+    await loginPage.goto();
+    expect(userNameInputPlaceholder).toEqual("Username");
+    expect(passwordInputPlaceholder).toEqual("Password");
+    expect(loginPage.passwordInput).toBeEmpty();
+    // Fill the "Username" input field with valid user name
+    loginPage.userNameInput.fill(process.env.STANDARD_USER_NAME!);
+  });
+
+  await test.step(`Click "Login" button and see user didn't log in`, async () => {
+    // Click the "Login" button
+    await loginPage.loginButton.click();
+    //  See the "Epic sadface: Password is required" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.passwordIsRequired);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
+  });
+
+  await test.step("Close the error message", async () => {
+    // Click the error message Clode (X) button
+    //  See the error message disappears
+    await closeErrorMessage(loginPage);
+  });
+});
+
+/**
+ * @issue
+ * Navigate to https://www.saucedemo.com/
+ *  See the "Username" input field is empty
+ * Fill the "Password" input field with valid password
+ * Click the "Login" button
+ *  See the "Epic sadface: Username is required" error message appears
+ *  See the page URL didn't change
+ * Click the error message Clode (X) button
+ *  See the error message disappears
+ */
+test("Log in with empty user name & valid password credentials", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await page.context().clearCookies();
+
+  await test.step(`Set the empty "Username" & valid "Password" credentials`, async () => {
+    // Navigate to https://www.saucedemo.com/
+    await loginPage.goto();
+    //  See the "Username" input field is empty
+    const userNameInputPlaceholder = await loginPage.userNameInput.getAttribute("placeholder");
+    const passwordInputPlaceholder = await loginPage.passwordInput.getAttribute("placeholder");
+    await loginPage.goto();
+    expect(userNameInputPlaceholder).toEqual("Username");
+    expect(passwordInputPlaceholder).toEqual("Password");
+    expect(loginPage.userNameInput).toBeEmpty();
+    // Fill the "Password" input field with valid password
+    loginPage.passwordInput.fill(process.env.PASSWORD!);
+  });
+
+  await test.step(`Click "Login" button and see user didn't log in`, async () => {
+    // Click the "Login" button
+    await loginPage.loginButton.click();
+    //  See the "Epic sadface: Username is required" error message appears
+    await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.userNameIsRequired);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
+  });
+
+  await test.step("Close the error message", async () => {
+    // Click the error message Clode (X) button
+    //  See the error message disappears
+    await closeErrorMessage(loginPage);
+  });
+});
+
+/**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the SQL injection data to "Username" and "Password" input fields
  * Click the "Login" button
- *  See the page URL didn't change
  *  See the "Epic sadface: Username and password do not match any user in this service" error message appears
+ *  See the page URL didn't change
  *  See user didn't log in
  * Click the error message Clode (X) button
  *  See the error message disappears
@@ -225,11 +373,11 @@ test("SQL Injection vulnerability test", async ({ page }) => {
 
   await test.step("Validate that SQL injection didn't work", async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
-    //  See the page URL didn't change
-    await expect(page).toHaveURL(process.env.BASE_URL!);
+    await loginPage.loginButton.click();
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.invalidCredentials);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
     //  See the user was not redirected to other page
     expect(page.url()).toBe(process.env.BASE_URL);
   });
@@ -242,6 +390,7 @@ test("SQL Injection vulnerability test", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set the XSS payload data to "Username" input field and wrong password to "Password" input field
  * Click the "Login" button
@@ -271,7 +420,7 @@ test("XSS vulnerability test", async ({ page }) => {
 
   await test.step("Validate that XSS Payload data isn't executed", async () => {
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the page didn't execute the XSS payload
     try {
       await expect(page.locator("alert")).toHaveCount(0);
@@ -281,6 +430,8 @@ test("XSS vulnerability test", async ({ page }) => {
     //  See the "Epic sadface: Username and password do not match any user in this service" error message appears
     try {
       await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.invalidCredentials);
+      //  See the page URL didn't change
+      await expect(page).toHaveURL(process.env.BASE_URL!);
     } catch (error) {
       throw new Error(
         `The "${loginPage.messages.invalidCredentials}" error message\n
@@ -299,6 +450,7 @@ test("XSS vulnerability test", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/
  * Set valid "Username" and "Password" credentials
  * Click the "Login" button
@@ -322,7 +474,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
     expect(passwordInputPlaceholder).toEqual("Password");
     await loginPage.passwordInput.fill(process.env.PASSWORD!);
     // Click the "Login" button
-    await page.getByTestId("login-button").click();
+    await loginPage.loginButton.click();
     //  See the sort container appears
     await expect(productsPage.sortContainer).toBeVisible();
   });
@@ -341,6 +493,7 @@ test.skip("Session cookie attributes test", async ({ page }) => {
 });
 
 /**
+ * @issue
  * Navigate to https://www.saucedemo.com/inventory.html without logging in
  *  See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
  * Navigate to https://www.saucedemo.com/inventory-item.html without logging in
@@ -361,17 +514,23 @@ test("Navigate Inventory, Inventory Items, Cart and Checkout pages without loggi
     await page.goto(process.env.PRODUCTS_PAGE_URL!);
     //  See the "Epic sadface: You can only access '/inventory.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.loggedOutProductsPageNavigate);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
   await test.step(`Navigate to https://www.saucedemo.com/inventory-item.html without logging in`, async () => {
     await page.goto(process.env.ITEM_PAGE_URL!);
     //  See the "Epic sadface: You can only access '/inventory-item.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.loggedOutItemPageNavigate);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
   await test.step(`Navigate to https://www.saucedemo.com/cart.html without logging in`, async () => {
     // Navigate to https://www.saucedemo.com/cart.html without logging in
     await page.goto(process.env.YOUR_CART_PAGE_URL!);
     //  See the "Epic sadface: You can only access '/cart.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.loggedOutCartPageNavigate);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
   await test.step(`Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in`, async () => {
     // Navigate to https://www.saucedemo.com/checkout-step-one.html without logging in
@@ -379,6 +538,8 @@ test("Navigate Inventory, Inventory Items, Cart and Checkout pages without loggi
     /* eslint-disable-next-line max-len */
     //  See the "Epic sadface: You can only access '/checkout-step-one.html' when you are logged in" error message appears
     await expect(loginPage.errorMessageContainer).toHaveText(loginPage.messages.loggedOutCheckoutPageNavigate);
+    //  See the page URL didn't change
+    await expect(page).toHaveURL(process.env.BASE_URL!);
   });
   await test.step(`Close the error message`, async () => {
     // Click the error message Clode (X) button
