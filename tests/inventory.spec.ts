@@ -46,11 +46,11 @@ test("User should be able to buy one item", async ({ page }) => {
   await productsPage.goto();
 
   await test.step("Add item to cart", async () => {
-    inventoryItem.name = await productsPage.itemDetails.itemsNames.first().textContent();
+    inventoryItem.name = await productsPage.itemDetails.getName(0);
     assert(inventoryItem.name, `There's no name received`);
-    inventoryItem.description = await productsPage.itemDetails.itemsDescriptions.first().textContent();
+    inventoryItem.description = await productsPage.itemDetails.getDescription(0);
     assert(inventoryItem.description, `There's no description received`);
-    inventoryItem.price = await productsPage.itemDetails.itemsPrices.first().textContent();
+    inventoryItem.price = await productsPage.itemDetails.getPrice(0);
     assert(inventoryItem.price, `There's no price received`);
 
     // Click item "Add to cart" button
@@ -64,9 +64,9 @@ test("User should be able to buy one item", async ({ page }) => {
     await productsPage.shoppingCart.click();
     //  See the Shopping cart has "1" counter
     await expect(productsPage.shoppingCart.counter).toHaveText("1");
-    cartItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
-    cartItem.description = await yourCartPage.itemDetails.itemsDescriptions.textContent();
-    cartItem.price = await yourCartPage.itemDetails.itemsPrices.textContent();
+    cartItem.name = await yourCartPage.itemDetails.getName(0);
+    cartItem.description = await yourCartPage.itemDetails.getDescription(0);
+    cartItem.price = await yourCartPage.itemDetails.getPrice(0);
     //  See Item Name, Price & Description are valid
     expect(cartItem.name).toEqual(inventoryItem.name);
     expect(cartItem.description).toEqual(inventoryItem.description);
@@ -91,9 +91,9 @@ test("User should be able to buy one item", async ({ page }) => {
   });
   await test.step(`Validate product & pricing details`, async () => {
     //  See Item Name, Price & Description are valid
-    checkoutItem.name = await yourCartPage.itemDetails.itemsNames.textContent();
-    checkoutItem.description = await yourCartPage.itemDetails.itemsDescriptions.textContent();
-    checkoutItem.price = await yourCartPage.itemDetails.itemsPrices.textContent();
+    checkoutItem.name = await yourCartPage.itemDetails.getName(0);
+    checkoutItem.description = await yourCartPage.itemDetails.getDescription(0);
+    checkoutItem.price = await yourCartPage.itemDetails.getPrice(0);
     expect(checkoutItem.name).toEqual(inventoryItem.name);
     expect(checkoutItem.description).toEqual(inventoryItem.description);
     expect(checkoutItem.price).toEqual(inventoryItem.price);
@@ -161,11 +161,11 @@ test("User should be able to buy multiple items", async ({ page }) => {
       // Click "Add to cart" button for each item
       //  See the Shopping cart counter increases
       await productsPage.addItemToCart(index);
-      const name = await productsPage.itemDetails.getItemName(index);
+      const name = await productsPage.itemDetails.getName(index);
       assert(name, `There's no name received`);
-      const description = await productsPage.itemDetails.getItemDescription(index);
+      const description = await productsPage.itemDetails.getDescription(index);
       assert(description, `There's no description received`);
-      const price = await productsPage.itemDetails.getItemPrice(index);
+      const price = await productsPage.itemDetails.getPrice(index);
       assert(price, `There's no price received`);
 
       inventoryItems.push({ name, description, price });
@@ -179,9 +179,9 @@ test("User should be able to buy multiple items", async ({ page }) => {
     //  See the Shopping cart counter didn't change
     expect(await yourCartPage.shoppingCart.getCounterNumber()).toEqual(itemsCount);
     for (let index = 0; index < itemsCount; index++) {
-      const name = await yourCartPage.itemDetails.getItemName(index);
-      const description = await yourCartPage.itemDetails.getItemDescription(index);
-      const price = await yourCartPage.itemDetails.getItemPrice(index);
+      const name = await yourCartPage.itemDetails.getName(index);
+      const description = await yourCartPage.itemDetails.getDescription(index);
+      const price = await yourCartPage.itemDetails.getPrice(index);
       //  See Item Name, Price & Description are valid
       try {
         expect(inventoryItems[index].name).toEqual(name);
@@ -212,9 +212,9 @@ test("User should be able to buy multiple items", async ({ page }) => {
     await test.step(`Validate product & pricing details`, async () => {
       let totalPrice = 0;
       for (let index = 0; index < itemsCount; index++) {
-        const name = await checkoutPage.overview.itemDetails.getItemName(index);
-        const description = await checkoutPage.overview.itemDetails.getItemDescription(index);
-        const price = await checkoutPage.overview.itemDetails.getItemPrice(index);
+        const name = await checkoutPage.overview.itemDetails.getName(index);
+        const description = await checkoutPage.overview.itemDetails.getDescription(index);
+        const price = await checkoutPage.overview.itemDetails.getPrice(index);
         //  See Item Name, Price & Description are valid
         try {
           expect(inventoryItems[index].name).toEqual(name);
@@ -270,13 +270,13 @@ test("All items details should correspond to its details page", async ({ page })
   for (let index = 0; index < itemsCount; index++) {
     await test.step(`The item #${index + 1} details should correspond to its details page`, async () => {
       // Get item Name, Description, Price & Image URL
-      const itemName = await productsPage.itemDetails.itemsNames.nth(index).textContent();
+      const itemName = await productsPage.itemDetails.getName(index);
       assert(itemName, `There's no item name received`);
-      const itemDescription = await productsPage.itemDetails.itemsDescriptions.nth(index).textContent();
+      const itemDescription = await productsPage.itemDetails.getDescription(index);
       assert(itemDescription, `There's no item description received`);
-      const itemPrice = await productsPage.itemDetails.itemsPrices.nth(index).textContent();
+      const itemPrice = await productsPage.itemDetails.getPrice(index);
       assert(itemPrice, `There's no item price received`);
-      const itemImageURL = await productsPage.itemDetails.itemsImages.nth(index).getAttribute("src");
+      const itemImageURL = await productsPage.itemDetails.getImageURL(index);
       assert(itemImageURL, `There's no item image URL received`);
       // Click item name
       await productsPage.itemDetails.itemsNames.nth(index).click();

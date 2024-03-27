@@ -17,17 +17,17 @@ export default class ItemDetails {
     this.cartQuantity = page.locator(".cart_quantity");
   }
 
-  async getItemName(index = 0) {
+  async getName(index = 0) {
     return await this.itemsNames.nth(index).textContent();
   }
-  async getItemDescription(index = 0) {
+  async getDescription(index = 0) {
     return await this.itemsDescriptions.nth(index).textContent();
   }
-  async getItemPrice(index = 0) {
+  async getPrice(index = 0) {
     return await this.itemsPrices.nth(index).textContent();
   }
-  async getItemImage(index = 0) {
-    return await this.itemsImages.nth(index).textContent();
+  async getImageURL(index = 0) {
+    return await this.itemsImages.nth(index).getAttribute("src");
   }
   async getCartQuantity(index = 0) {
     return await this.cartQuantity.nth(index).textContent();
